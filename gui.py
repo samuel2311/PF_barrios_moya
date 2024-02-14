@@ -7,12 +7,33 @@ from pathlib import Path
 
 from tkinter import *
 # Explicit imports to satisfy Flake8
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
-from gpiozero import LED, PMWLED
+#import RPi.GPIO as GPIO
+from gpiozero import LED,PWMLED
+#funciones de apagr y prender
+#hola
+
+led=PWMLED(18)
+def intensidad(event):
+    event=slider1.get()
+    led.value=event*0.01
+def apagar():
+    button_1["state"]=NORMAL #habilita boton encender
+    button_2["state"]=DISABLED # desabilita el boton apagar
+    slider1.set(0)
+    intensidad
+    slider1["state"]=DISABLED #desabilita slider
 
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Samue\OneDrive - Universidad del Norte\Noveno Semestre\PF\Tkinter-Designer-Master\build\assets\frame0")
+def encender(): 
+    button_2["state"]=NORMAL #habiliad boton apagar
+    button_1["state"]=DISABLED #desabilita boton apagar
+    slider1["state"]=NORMAL # habilita slider
+    slider1.set(100)
+    intensidad
+    
+#GUI
+OUTPUT_PATH = Path(_file_).parent
+ASSETS_PATH = OUTPUT_PATH / Path(r"/home/pi/Descargas/build/assets/frame0")
 
 
 def relative_to_assets(path: str) -> Path:
@@ -21,15 +42,15 @@ def relative_to_assets(path: str) -> Path:
 
 window = Tk()
 
-window.geometry("543x322")
-window.configure(bg = "#0E174B")
+window.geometry("800x500")
+window.configure(bg = "#FFFFFF")
 
 
 canvas = Canvas(
     window,
     bg = "#FFFFFF",
-    height = 322,
-    width = 543,
+    height = 500,
+    width = 800,
     bd = 0,
     highlightthickness = 0,
     relief = "ridge"
@@ -38,34 +59,35 @@ canvas = Canvas(
 canvas.place(x = 0, y = 0)
 canvas.create_rectangle(
     0.0,
-    0.0,
-    543.0,
-    61.0,
-    fill="#D9D9D9",
+    2.842170943040401e-14,
+    800.0,
+    50.00000000000003,
+    fill="#2645B0",
     outline="")
 
 canvas.create_text(
-    76.0,
-    17.0,
+    27.999999999999943,
+    10.999999999999972,
     anchor="nw",
-    text="Control de irradiancia",
-    fill="#000000",
-    font=("LeagueSpartan Bold", 24 * -1)
+    text="Leds usando Tkinter",
+    fill="#FFFFFF",
+    font=("MontserratRoman Regular", 32 * -1)
 )
 
-button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
+button_image_1 = PhotoImage(
+    file=relative_to_assets("button_1.png"))
 button_1 = Button(
     image=button_image_1,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_1 clicked"),
+    command=encender,
     relief="flat"
 )
 button_1.place(
-    x=46.0,
-    y=98.0,
-    width=130.0,
-    height=50.0
+    x=17.999999999999943,
+    y=175.99999999999997,
+    width=122.0,
+    height=29.0
 )
 
 button_image_2 = PhotoImage(
@@ -74,22 +96,46 @@ button_2 = Button(
     image=button_image_2,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_2 clicked"),
+    command=apagar,
     relief="flat"
 )
 button_2.place(
-    x=46.0,
-    y=149.0,
-    width=130.0,
-    height=50.0
+    x=172.99999999999994,
+    y=175.99999999999997,
+    width=122.0,
+    height=29.0
+)
+button_2["state"]=DISABLED
+
+#slider led 1
+slider1 = Scale(window, from_=0,to=100, orient=HORIZONTAL,relief=FLAT,
+                widt=5,length=260,background="#22A6F2",
+                command=intensidad)
+slider1.place(x=21 , y=220)
+slider1["state"]=DISABLED #desabilitar cuando carga
+canvas.create_text(
+    106.99999999999994,
+    68.99999999999997,
+    anchor="nw",
+    text="LED 1",
+    fill="#000000",
+    font=("MontserratRoman Regular", 32 * -1)
 )
 
-canvas.create_rectangle(
-    442.0,
-    8.0,
-    489.0,
-    52.0,
-    fill="#FFFFFF",
-    outline="")
+image_image_1 = PhotoImage(
+    file=relative_to_assets("image_1.png"))
+image_1 = canvas.create_image(
+    642.0,
+    131.99999999999997,
+    image=image_image_1
+)
+
+image_image_2 = PhotoImage(
+    file=relative_to_assets("image_2.png"))
+image_2 = canvas.create_image(
+    149.99999999999994,
+    138.99999999999997,
+    image=image_image_2
+)
 window.resizable(False, False)
 window.mainloop()
